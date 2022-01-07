@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Main.css';
-
+import { useAuth0 } from "@auth0/auth0-react";
+import { Redirect } from "react-router-dom";
 
 function MainPage() {
   const [token, setToken] = useState("");
