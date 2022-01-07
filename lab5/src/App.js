@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+// import { Switch, Route } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Login } from "./Login";
 import MainPage from "./MainPage";
@@ -10,10 +10,11 @@ function App() {
     return <h1>Loading..</h1>;
   return (
     <>
-      <Switch>
+      {/* <Switch>
         <Route path="/login" component={Login} exact />
         <Route path="/" component={MainPage} exact />
-      </Switch>
+      </Switch> */}
+      <div>hello</div>
     </>
   );
 }
