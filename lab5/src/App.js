@@ -1,24 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Switch, Route } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Login } from "./Login";
+import MainPage from "./MainPage";
 
 function App() {
+  const { isLoading } = useAuth0();
+  if (isLoading)
+    return <h1>Loading..</h1>;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Switch>
+        <Route path="/login" component={Login} exact />
+        <Route path="/" component={MainPage} exact />
+      </Switch>
+    </>
   );
 }
 
