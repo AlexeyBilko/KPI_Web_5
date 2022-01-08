@@ -1,12 +1,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
-// import { Redirect } from "react-router-dom";
+import MainPage from "./MainPage";
 
-export const Login = () => {
-  const { loginWithPopup, isAuthenticated } = useAuth0();
-//   if (isAuthenticated)
-//     return <Redirect to="/" />;
-  return (
+function Login(){
+    const { loginWithPopup, isAuthenticated } = useAuth0();
+   if (isAuthenticated)
+     return <MainPage to="/" />;
+   return (
     <div>
       <button
         onClick={async () => {
@@ -18,3 +18,5 @@ export const Login = () => {
     </div>
   );
 };
+
+export default Login;

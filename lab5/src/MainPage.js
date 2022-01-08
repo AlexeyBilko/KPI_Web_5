@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react';
 import './Main.css';
 import { useAuth0 } from "@auth0/auth0-react";
-// import { Redirect } from "react-router-dom";
+import Login from './Login';
 
 function MainPage() {
   const [token, setToken] = useState("");
   const { getAccessTokenSilently, isAuthenticated, isLoading, error, logout } = useAuth0();
-  useEffect(async () => {
-    if (isAuthenticated) {
-      const myToken = await getAccessTokenSilently();
-      setToken(myToken);
-    }
-  }, [token]);
 
   const [marks, setMarks] = useState([]);
   const [subject, setSubject] = useState("");
@@ -34,22 +28,32 @@ function MainPage() {
   `;
 
   useEffect(()=>{
-    fetch(
-      'https://kpi-web-lab5-auth.herokuapp.com/v1/graphql',
-      {
-        method: "POST",
-        body: JSON.stringify({
-          query: operationsDoc,
-          variables: {},
-          operationName: "MyQuery"
-        })
-      }
-    ).then(res => res.json()).then(
-      (result) => {
-          setMarks(result.data.marks_marks);
-      }
-    )
-  })
+    if (isAuthenticated) {
+      const myToken = getAccessTokenSilently();
+      setToken(myToken);
+    }
+    else return <Login to="/login" />;
+    if(token){
+      fetch(
+        'https://kpi-web-lab5-auth.herokuapp.com/v1/graphql',
+        {
+          method: "POST",
+          body: JSON.stringify({
+            query: operationsDoc,
+            variables: {},
+            operationName: "MyQuery"
+          }),
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ).then(res => res.json()).then(
+        (result) => {
+            setMarks(result.data.marks_marks);
+        }
+      )
+    }
+  },[token, isAuthenticated, operationsDoc])
 
   const handleAddLine = (event) => {
     event.preventDefault();
@@ -111,10 +115,12 @@ function MainPage() {
         console.log(result);
       })
   })
-
-  // if (!isAuthenticated) return <Redirect to="/login" />;
+  if (!isAuthenticated) return <Login to="/login" />;
+  if (error) return <h1>{error.message}</h1>;
+  if (isLoading) return <h1>Loading..</h1>;
   return (
     <main>
+      <button onClick={logout}>logout</button>
     <div className="App">
         <form onSubmit={handleAddLine} id="msform">
             <fieldset>
