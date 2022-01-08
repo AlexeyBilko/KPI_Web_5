@@ -11,8 +11,12 @@ function App() {
   return (
     <>
       <Switch>
-        <Route path='/login' component={Login} exact/>
-        <Route path='/' component={MainPage} exact/>
+        <Route path='/login' exact>
+          <Login></Login>
+        </Route>
+        <Route path='/' exact>
+          <MainPage></MainPage>
+        </Route>
       </Switch>
     </>
   );

@@ -8,14 +8,14 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 const wsLink = new WebSocketLink({
-  uri: 'wss://kpi-web-lab5-auth.herokuapp.com/v1/graphql',
+  uri: 'wss://web-laba5-edu.herokuapp.com/v1/graphql',
   options: {
     reconnect: true,
   },
 });
 const client = new ApolloClient({
   link: wsLink,
-  uri: 'https://kpi-web-lab5-auth.herokuapp.com/v1/graphql',
+  uri: 'https://web-laba5-edu.herokuapp.com/v1/graphql',
   cache: new InMemoryCache(),
 });
 

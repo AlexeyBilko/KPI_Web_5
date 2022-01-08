@@ -3,7 +3,7 @@ import React from "react";
 import MainPage from "./MainPage";
 
 function Login(){
-    const { loginWithPopup, isAuthenticated } = useAuth0();
+   const { loginWithPopup, isAuthenticated } = useAuth0();
    if (isAuthenticated)
      return <MainPage to="/" />;
    return (

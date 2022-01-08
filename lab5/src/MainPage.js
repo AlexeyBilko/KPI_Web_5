@@ -17,25 +17,28 @@ function MainPage() {
   const [subjectToDelete, setSubjectToDelete] = useState("");
   const [semesterToDelete, setSemesterToDelete] = useState(0);
   const operationsDoc = `
-    query MyQuery {
-      marks_marks {
-        mark
-        semester
-        subject
-        teacher
-      }
+  query MyQuery {
+    lab5_marks {
+      id
+      user_id
+      teacher
+      subject
+      semester
+      mark
     }
+  }
   `;
 
-  useEffect(()=>{
+  useEffect(async ()=>{
     if (isAuthenticated) {
-      const myToken = getAccessTokenSilently();
+      const myToken = await getAccessTokenSilently();
       setToken(myToken);
+      console.log(myToken);
     }
     else return <Login to="/login" />;
     if(token){
       fetch(
-        'https://kpi-web-lab5-auth.herokuapp.com/v1/graphql',
+        'https://web-laba5-edu.herokuapp.com/v1/graphql',
         {
           method: "POST",
           body: JSON.stringify({
@@ -49,7 +52,8 @@ function MainPage() {
         }
       ).then(res => res.json()).then(
         (result) => {
-            setMarks(result.data.marks_marks);
+          console.log(result);
+          setMarks(result.data.lab5_marks);
         }
       )
     }
@@ -58,20 +62,19 @@ function MainPage() {
   const handleAddLine = (event) => {
     event.preventDefault();
     fetch(
-      'https://kpi-web-lab5-auth.herokuapp.com/v1/graphql',
+      'https://web-laba5-edu.herokuapp.com/v1/graphql',
       {
         method: "POST",
         body: JSON.stringify({
           query: `
             mutation MyMutation {
-              insert_marks_marks(objects: {mark: ${parseInt(mark)}, semester: ${parseInt(semester)}, subject: "${subject}", teacher: "${teacher}"}){
-                returning {
-                  id,
-                  mark,
-                  semester,
-                  subject,
-                  teacher
-                }
+              insert_lab5_marks_one(object: {mark: ${parseInt(mark)}, semester: ${parseInt(semester)}, subject: "${subject}", teacher: "${teacher}"}) {
+                id
+                user_id
+                teacher
+                mark
+                semester
+                subject
               }
             }
           `,
@@ -89,19 +92,20 @@ function MainPage() {
       event.preventDefault();
       let tmp_semester = parseInt(semesterToDelete);
       fetch(
-        'https://kpi-web-lab5-auth.herokuapp.com/v1/graphql',
+        'https://web-laba5-edu.herokuapp.com/v1/graphql',
         {
           method: "POST",
           body: JSON.stringify({
             query: `
               mutation MyMutation {
-                delete_marks_marks(where: {subject: {_eq: "${subjectToDelete}"}, _and: {semester: {_eq: ${tmp_semester}}}}) {
+                delete_lab5_marks(where: {_and: {semester: ${tmp_semester}, subject: {_eq: "${subjectToDelete}"}}}) {
                   returning {
                     id
                     mark
                     semester
                     subject
                     teacher
+                    user_id
                   }
                 }
               }
