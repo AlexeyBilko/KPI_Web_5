@@ -9,7 +9,7 @@ const DeleteRow = (props) => {
           body: JSON.stringify({
             query: `
               mutation MyMutation {
-                delete_lab5_marks(where: {_and: {semester: ${tmp_semester}, subject: {_eq: "${subject}"}}}) {
+                delete_lab5_marks(where: {_and: {semester: {_eq: "${tmp_semester}"}, subject: {_eq: "${subject}"}}}) {
                   returning {
                     id
                     mark
