@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './Main.css';
 import { useAuth0 } from "@auth0/auth0-react";
 import Login from './Login';
+import DeleteRow from './DeleteRow';
 
 function MainPage() {
   const [token, setToken] = useState("");
@@ -13,9 +14,9 @@ function MainPage() {
   const [semester, setSemester] = useState(0);
   const [teacher, setTeacher] = useState("");
 
-
   const [subjectToDelete, setSubjectToDelete] = useState("");
   const [semesterToDelete, setSemesterToDelete] = useState(0);
+
   const operationsDoc = `
   query MyQuery {
     lab5_marks {
@@ -80,7 +81,10 @@ function MainPage() {
           `,
           variables: {},
           operationName: "MyMutation"
-        })
+        }),
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
       }
     ).then(res => res.json())
     .then((result) => {
@@ -88,37 +92,6 @@ function MainPage() {
     })
   }
 
-  const HandleDeleteLine = ((event)=>{
-      event.preventDefault();
-      let tmp_semester = parseInt(semesterToDelete);
-      fetch(
-        'https://web-laba5-edu.herokuapp.com/v1/graphql',
-        {
-          method: "POST",
-          body: JSON.stringify({
-            query: `
-              mutation MyMutation {
-                delete_lab5_marks(where: {_and: {semester: ${tmp_semester}, subject: {_eq: "${subjectToDelete}"}}}) {
-                  returning {
-                    id
-                    mark
-                    semester
-                    subject
-                    teacher
-                    user_id
-                  }
-                }
-              }
-            `,
-            variables: {},
-            operationName: "MyMutation"
-          })
-        }
-      ).then(res => res.json())
-      .then((result) => {
-        console.log(result);
-      })
-  })
   if (!isAuthenticated) return <Login to="/login" />;
   if (error) return <h1>{error.message}</h1>;
   if (isLoading) return <h1>Loading..</h1>;
@@ -136,14 +109,6 @@ function MainPage() {
                 <input type="submit" name="next" className="next action-button" value="Add" />
             </fieldset>
         </form>
-        <form onSubmit={HandleDeleteLine} id="msform2">
-            <fieldset>
-                <h2 className="fs-title">Delete Line (Enter subject and semester)</h2>
-                <input type="text" name="subject" placeholder="subject" value={subjectToDelete} onChange={(e) => setSubjectToDelete(e.target.value)}/>
-                <input type="number" name="semester" placeholder="semester" value={semesterToDelete} onChange={(e) => setSemesterToDelete(e.target.value)}/>
-                <input type="submit" name="next" className="next action-button" value="Delete" />
-            </fieldset>
-        </form>
         <table>
           <thead>
             <tr>
@@ -151,6 +116,7 @@ function MainPage() {
               <th>Mark</th>
               <th>Semester</th>
               <th>Teacher</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -161,6 +127,7 @@ function MainPage() {
                   <td>{ item.mark }</td>
                   <td>{ item.semester }</td>
                   <td>{ item.teacher }</td>
+                  <td><DeleteRow itemtodelete={item} token={token}></DeleteRow></td>
                 </tr>
               );
             })}
