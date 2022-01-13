@@ -62,6 +62,8 @@ function MainPage() {
 
   const handleAddLine = (event) => {
     event.preventDefault();
+    let intMark = parseInt(mark);
+    let intSemester = parseInt(semester);
     fetch(
       'https://web-laba5-edu.herokuapp.com/v1/graphql',
       {
@@ -69,7 +71,7 @@ function MainPage() {
         body: JSON.stringify({
           query: `
             mutation MyMutation {
-              insert_lab5_marks_one(object: {mark: ${parseInt(mark)}, semester: ${parseInt(semester)}, subject: "${subject}", teacher: "${teacher}"}) {
+              insert_lab5_marks_one(object: {mark: ${intMark}, semester: ${intSemester}, subject: "${subject}", teacher: "${teacher}"}) {
                 id
                 user_id
                 teacher
@@ -90,6 +92,10 @@ function MainPage() {
     .then((result) => {
       console.log(result);
     })
+    setMark(0);
+    setSemester(0);
+    setSubject("");
+    setTeacher("");
   }
 
   if (!isAuthenticated) return <Login to="/login" />;
