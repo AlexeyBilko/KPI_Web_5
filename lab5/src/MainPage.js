@@ -14,7 +14,7 @@ function MainPage() {
   const [semester, setSemester] = useState(0);
   const [teacher, setTeacher] = useState("");
 
-  const [error, setError] = useState(false);
+  const [fetcherror, setError] = useState(false);
 
   const operationsDoc = `
   query MyQuery {
@@ -122,7 +122,7 @@ function MainPage() {
                 <input type="submit" name="next" className="next action-button" value="Add" />
             </fieldset>
         </form>
-        <div style={{display: error ? "block" : "none" }} className="errorSend">
+        <div style={{display: fetcherror ? "block" : "none" }} className="errorSend">
           <label>Fetch error</label>
         </div>
         <table>
