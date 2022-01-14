@@ -14,8 +14,7 @@ function MainPage() {
   const [semester, setSemester] = useState(0);
   const [teacher, setTeacher] = useState("");
 
-  const [subjectToDelete, setSubjectToDelete] = useState("");
-  const [semesterToDelete, setSemesterToDelete] = useState(0);
+  const [error, setError] = useState(false);
 
   const operationsDoc = `
   query MyQuery {
@@ -57,6 +56,10 @@ function MainPage() {
           setMarks(result.data.lab5_marks);
         }
       )
+      .catch((exception) => {
+        console.log("Error");
+        setError(true);
+      })
     }
   },[token, isAuthenticated, operationsDoc])
 
@@ -92,6 +95,10 @@ function MainPage() {
     .then((result) => {
       console.log(result);
     })
+    .catch((exception) => {
+      console.log("Error");
+      setError(true);
+    })
     setMark(0);
     setSemester(0);
     setSubject("");
@@ -115,6 +122,9 @@ function MainPage() {
                 <input type="submit" name="next" className="next action-button" value="Add" />
             </fieldset>
         </form>
+        <div style={{display: error ? "block" : "none" }} className="errorSend">
+          <label>Fetch error</label>
+        </div>
         <table>
           <thead>
             <tr>
